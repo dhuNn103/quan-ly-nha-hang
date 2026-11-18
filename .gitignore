@@ -1,0 +1,12 @@
+# Environment
+.env
+
+# Data and backups
+data.json.tmp
+backups/
+
+# Logs and system
+*.log
+.DS_Store
+Thumbs.db
+node_modules/
