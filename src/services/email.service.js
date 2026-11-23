@@ -19,6 +19,15 @@ class EmailService {
     return `${hours}:${minutes}:${seconds} ${day}/${month}/${year}`;
   }
 
+  formatDMY(dateStr) {
+    if (!dateStr) return '';
+    const parts = String(dateStr).split('-');
+    if (parts.length === 3) {
+      return `${parts[2]}/${parts[1]}/${parts[0]}`;
+    }
+    return String(dateStr);
+  }
+
   /**
    * Parse email address from string, e.g. "Name <email@dom.com>" -> "email@dom.com"
    */
@@ -499,8 +508,8 @@ ${restaurantName} · Hotline: ${phone} · Địa chỉ: ${address}
       <li><strong>Khách hàng:</strong> ${reservation.name}</li>
       <li><strong>Số điện thoại:</strong> ${reservation.phone}</li>
       <li><strong>Số khách:</strong> ${reservation.guests} khách</li>
-      <li><strong>Ngày giờ đến:</strong> ${reservation.time} ngày ${reservation.date}</li>
-      <li><strong>Khu vực:</strong> ${reservation.space || 'Bàn chung'}</li>
+      <li><strong>Ngày giờ đến:</strong> ${reservation.time} ngày ${this.formatDMY(reservation.date)}</li>
+      <li><strong>Khu vực:</strong> ${reservation.space || 'Bàn tiêu chuẩn'}</li>
       <li><strong>Ghi chú:</strong> ${reservation.note || 'Không có'}</li>
       <li><strong>Chính sách cọc:</strong> ${reservation.depositPolicy ? reservation.depositPolicy.label : 'Tiêu chuẩn'}</li>
     </ul>
@@ -514,7 +523,7 @@ ${restaurantName} · Hotline: ${phone} · Địa chỉ: ${address}
       await this.sendMail(smtp, {
         to: adminEmail,
         subject,
-        text: `Đặt bàn mới ${reservation.id} từ ${reservation.name} (${reservation.phone}) - ${reservation.guests} khách lúc ${reservation.time} ngày ${reservation.date}`,
+        text: `Đặt bàn mới ${reservation.id} từ ${reservation.name} (${reservation.phone}) - ${reservation.guests} khách lúc ${reservation.time} ngày ${this.formatDMY(reservation.date)}`,
         html
       });
       logger.info(`[EmailService] Đã gửi email đặt bàn ${reservation.id} tới ${adminEmail}`);

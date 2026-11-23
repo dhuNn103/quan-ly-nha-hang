@@ -29,6 +29,37 @@ class ReservationService {
     return `${y}-${m}-${d}`;
   }
 
+  // Helper: Format DD/MM/YYYY
+  formatDMY(dateStr) {
+    if (!dateStr) return '';
+    const parts = String(dateStr).split('-');
+    if (parts.length === 3) {
+      return `${parts[2]}/${parts[1]}/${parts[0]}`;
+    }
+    return String(dateStr);
+  }
+
+  // Helper: Sinh mã đặt bàn duy nhất, luôn tăng dần và không bao giờ trùng lặp
+  getNextReservationId(s) {
+    if (!s) return 'DB' + Date.now();
+    let maxNum = 0;
+    if (Array.isArray(s.reservations)) {
+      for (const r of s.reservations) {
+        if (r && r.id) {
+          const m = String(r.id).match(/^DB(\d+)$/i);
+          if (m) {
+            const n = parseInt(m[1], 10);
+            if (!isNaN(n) && n > maxNum) maxNum = n;
+          }
+        }
+      }
+    }
+    const currentSeq = (typeof s.seq === 'number' && !isNaN(s.seq)) ? s.seq : 1;
+    const nextNum = Math.max(currentSeq, maxNum + 1);
+    s.seq = nextNum + 1;
+    return 'DB' + nextNum;
+  }
+
   /**
    * Tính toán chính sách tiền cọc đặt bàn:
    * - 1–4 khách: ko cần cọc (level: 'none')
@@ -244,16 +275,13 @@ class ReservationService {
       };
     }
 
-    // Sequence ID
-    if (typeof s.seq !== 'number' || isNaN(s.seq)) {
-      s.seq = 1;
-    }
-
+    // Unique Sequence ID
     if (!Array.isArray(s.reservations)) {
       s.reservations = [];
     }
 
-    const resId = 'DB' + (s.seq++);
+    const resId = this.getNextReservationId(s);
+    const dateFormatted = this.formatDMY(date);
     const isHoliday = !!body.isHoliday;
     const depositPolicy = this.calculateDepositPolicy({ guests, space, date, isHoliday, note });
     const reservation = {
@@ -289,7 +317,7 @@ class ReservationService {
       t: now,
       by: 'Khách (Trang chủ)',
       a: 'Khách đặt bàn',
-      d: `${name} (${phone}) - ${guests} người - ${time} ngày ${date}`
+      d: `Mã ${resId}: ${name} (${phone}) - ${guests} người - ${space} - ${time} ngày ${dateFormatted}${note ? ` (Ghi chú: ${note})` : ''}`
     });
 
     db.bump();
@@ -341,11 +369,11 @@ class ReservationService {
       return { status: 400, data: { error: 'Số lượng khách phải từ 1 đến 200 người.' } };
     }
 
-    // Sequence ID
-    if (typeof s.seq !== 'number' || isNaN(s.seq)) s.seq = 1;
+    // Unique Sequence ID
     if (!Array.isArray(s.reservations)) s.reservations = [];
 
-    const resId = 'DB' + (s.seq++);
+    const resId = this.getNextReservationId(s);
+    const dateFormatted = this.formatDMY(date);
     let assignedTableId = null;
     let assignedTableName = null;
 
@@ -396,7 +424,7 @@ class ReservationService {
       t: now,
       by: user.name || user.u,
       a: 'Tạo đặt bàn mới ' + resId,
-      d: `${name} (${phone}) - ${guests} người - ${time} ngày ${date} [${status}]`
+      d: `Mã ${resId}: ${name} (${phone}) - ${guests} người - ${space} - ${time} ngày ${dateFormatted} [${status}]`
     });
 
     db.bump();

@@ -3,28 +3,46 @@ const authService = require('./auth.service');
 const logger = require('../logger');
 
 class StateService {
-  // Calculate top 6 most popular dish IDs from invoices and active orders
-  calculateHotIds(state) {
-    if (!state) return [];
+  // Calculate dish sales count dictionary from invoices and active orders
+  calculateDishSales(state) {
+    if (!state) return {};
     const countMap = {};
+    const add = (name, qty) => {
+      if (!name) return;
+      const nm = String(name).trim();
+      const l = nm.toLowerCase();
+      countMap[nm] = (countMap[nm] || 0) + qty;
+      if (l !== nm) countMap[l] = (countMap[l] || 0) + qty;
+    };
 
     (state.inv || []).forEach(invoice => {
       (invoice.items || []).forEach(item => {
-        countMap[item.name] = (countMap[item.name] || 0) + (item.qty || 0);
-      });
-    });
-
-    (state.orders || []).forEach(order => {
-      (order.items || []).forEach(item => {
-        if (item.st !== 'cancel') {
-          countMap[item.name] = (countMap[item.name] || 0) + (item.qty || 0);
+        if (item && item.name) {
+          add(item.name, Number(item.qty) || 1);
         }
       });
     });
 
+    const liveOrders = (state.orders || []).filter(o => o && o.pay !== 'paid');
+    liveOrders.forEach(order => {
+      (order.items || []).forEach(item => {
+        if (item && item.st !== 'cancel' && item.name) {
+          add(item.name, Number(item.qty) || 1);
+        }
+      });
+    });
+
+    return countMap;
+  }
+
+  // Calculate top 6 most popular dish IDs from invoices and active orders
+  calculateHotIds(state) {
+    if (!state) return [];
+    const countMap = this.calculateDishSales(state);
+
     return (state.menu || [])
-      .filter(m => m.st !== 'hide' && countMap[m.name])
-      .map(m => ({ id: m.id, q: countMap[m.name] }))
+      .filter(m => m && m.st !== 'hide' && (countMap[m.name] || countMap[String(m.name).trim().toLowerCase()]))
+      .map(m => ({ id: m.id, q: countMap[m.name] || countMap[String(m.name).trim().toLowerCase()] || 0 }))
       .sort((a, b) => b.q - a.q)
       .slice(0, 6)
       .map(x => x.id);
@@ -78,7 +96,8 @@ class StateService {
         menu: (s.menu || []).filter(m => m.st !== 'hide'),
         tables: (s.tables || []).filter(x => x.id === t),
         orders: (s.orders || []).filter(o => o.table === t && o.pay !== 'paid'),
-        hot: this.calculateHotIds(s)
+        hot: this.calculateHotIds(s),
+        dishSales: this.calculateDishSales(s)
       }
     };
   }
@@ -122,6 +141,20 @@ class StateService {
     // Only Admin is allowed to modify staff user accounts
     if (user.role !== 'admin') {
       body.state.users = db.state.users;
+    } else if (Array.isArray(body.state.users) && Array.isArray(db.state.users)) {
+      // Invalidate active sessions if staff password changed, account deactivated, or deleted
+      for (const oldU of db.state.users) {
+        if (!oldU || !oldU.u) continue;
+        const newU = body.state.users.find(x => x && x.u === oldU.u);
+        if (newU) {
+          if (newU.p !== oldU.p || (newU.st !== 'active' && oldU.st === 'active')) {
+            authService.revokeSessionsForUser(oldU.u);
+          }
+        } else {
+          // User deleted
+          authService.revokeSessionsForUser(oldU.u);
+        }
+      }
     }
 
     // Preserve sequence counter if missing in update

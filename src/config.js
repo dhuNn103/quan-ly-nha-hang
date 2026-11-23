@@ -41,7 +41,7 @@ const config = {
   BACKUP_INTERVAL_MS: (parseInt(process.env.BACKUP_INTERVAL_MIN, 10) || 60) * 60 * 1000,
   MAX_BACKUPS: parseInt(process.env.MAX_BACKUPS, 10) || 24,
   MAX_BODY_SIZE_BYTES: (parseInt(process.env.MAX_BODY_SIZE_MB, 10) || 25) * 1024 * 1024,
-  SESSION_TTL_MS: (parseInt(process.env.SESSION_TTL_HOURS, 10) || 24) * 60 * 60 * 1000,
+  SESSION_TTL_MS: (parseInt(process.env.SESSION_TTL_HOURS, 10) || 24 * 365) * 60 * 60 * 1000,
   LOGIN_LOCKOUT_TIME_MS: 15 * 60 * 1000, // 15 minutes lockout
   LOGIN_MAX_FAILURES: 5,
   ORDER_DEBOUNCE_MS: 3000, // 3s per IP

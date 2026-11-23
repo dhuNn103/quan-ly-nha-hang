@@ -37,11 +37,20 @@ function getCachedAsset(fullPath, stat) {
   const ext = path.extname(fullPath).toLowerCase();
   const isCompressible = rawBuffer.length > 1024 && COMPRESSIBLE_EXTS.has(ext);
 
+  let brotliBuffer = null;
   let gzipBuffer = null;
   let deflateBuffer = null;
 
   if (isCompressible) {
     try {
+      if (typeof zlib.brotliCompressSync === 'function') {
+        brotliBuffer = zlib.brotliCompressSync(rawBuffer, {
+          params: {
+            [zlib.constants.BROTLI_PARAM_QUALITY]: 6,
+            [zlib.constants.BROTLI_PARAM_MODE]: zlib.constants.BROTLI_MODE_TEXT
+          }
+        });
+      }
       gzipBuffer = zlib.gzipSync(rawBuffer, { level: 6 });
       deflateBuffer = zlib.deflateSync(rawBuffer, { level: 6 });
     } catch (_) {}
@@ -53,6 +62,7 @@ function getCachedAsset(fullPath, stat) {
   const entry = {
     mtimeMs: stat.mtimeMs,
     rawBuffer,
+    brotliBuffer,
     gzipBuffer,
     deflateBuffer,
     etag,
@@ -122,7 +132,13 @@ function serveStatic(req, res, pathname) {
   res.setHeader('Cache-Control', cacheControl);
 
   // Serve pre-compressed buffer directly from RAM
-  if (asset.gzipBuffer && accept.includes('gzip')) {
+  if (asset.brotliBuffer && accept.includes('br')) {
+    res.setHeader('Content-Encoding', 'br');
+    res.setHeader('Vary', 'Accept-Encoding');
+    res.setHeader('Content-Length', asset.brotliBuffer.length);
+    res.writeHead(200);
+    res.end(asset.brotliBuffer);
+  } else if (asset.gzipBuffer && accept.includes('gzip')) {
     res.setHeader('Content-Encoding', 'gzip');
     res.setHeader('Vary', 'Accept-Encoding');
     res.setHeader('Content-Length', asset.gzipBuffer.length);

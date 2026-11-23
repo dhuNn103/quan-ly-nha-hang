@@ -129,17 +129,22 @@ class AuthService {
 
   // Authenticate user with credentials using constant-time check
   login(username, password) {
+    const uStr = String(username || '').trim();
     const users = (db.state && Array.isArray(db.state.users)) ? db.state.users : [];
-    const user = users.find(x => x.u === username);
-    const failRecord = this.fails.get(username) || { n: 0, until: 0 };
+    // Priority exact match, fallback to case-insensitive match
+    const user = users.find(x => x && x.u === uStr) || 
+                 users.find(x => x && x.u && x.u.toLowerCase() === uStr.toLowerCase());
+    const failKey = user ? user.u.toLowerCase() : uStr.toLowerCase();
+    const failRecord = this.fails.get(failKey) || { n: 0, until: 0 };
     const now = Date.now();
 
-    // Check account lockout (Admin is never locked out)
-    if (user && user.role !== 'admin' && failRecord.until > now) {
+    // Check account lockout (Protects all accounts against brute-force attacks)
+    if (failRecord.until > now) {
+      const waitMinutes = Math.ceil((failRecord.until - now) / 60000);
       return {
         success: false,
         status: 429,
-        error: 'Tài khoản bị khóa 15 phút do nhập sai quá 5 lần.'
+        error: `Tài khoản bị khóa do nhập sai quá 5 lần. Vui lòng thử lại sau ${waitMinutes} phút.`
       };
     }
 
@@ -147,15 +152,13 @@ class AuthService {
     const passwordMatches = user && timingSafeEqual(user.p, password);
 
     if (!user || !passwordMatches) {
-      if (user && user.role !== 'admin') {
-        failRecord.n++;
-        if (failRecord.n >= config.LOGIN_MAX_FAILURES) {
-          failRecord.until = now + config.LOGIN_LOCKOUT_TIME_MS;
-          failRecord.n = 0;
-          logger.warn(`Tài khoản ${username} bị tạm khóa 15 phút do 5 lần đăng nhập sai.`);
-        }
-        this.fails.set(username, failRecord);
+      failRecord.n++;
+      if (failRecord.n >= config.LOGIN_MAX_FAILURES) {
+        failRecord.until = now + config.LOGIN_LOCKOUT_TIME_MS;
+        failRecord.n = 0;
+        logger.warn(`Tài khoản ${failKey} bị tạm khóa 15 phút do 5 lần đăng nhập sai.`);
       }
+      this.fails.set(failKey, failRecord);
       return {
         success: false,
         status: 401,
@@ -173,7 +176,7 @@ class AuthService {
     }
 
     // Reset failure counter on successful login
-    this.fails.delete(username);
+    this.fails.delete(failKey);
 
     // Create session token with sliding TTL
     const token = this.generateToken();
@@ -229,6 +232,24 @@ class AuthService {
     return false;
   }
 
+  // Revoke all active sessions for a specific user (e.g. on password change)
+  revokeSessionsForUser(username) {
+    if (!username) return 0;
+    const target = String(username).toLowerCase();
+    let count = 0;
+    for (const [token, data] of this.tokens.entries()) {
+      if (data && data.username && data.username.toLowerCase() === target) {
+        this.tokens.delete(token);
+        count++;
+      }
+    }
+    if (count > 0) {
+      this.scheduleSaveSessions();
+      logger.info(`Đã thu hồi ${count} phiên đăng nhập của người dùng '${username}'.`);
+    }
+    return count;
+  }
+
   // State filtering: admin sees full state including passwords; non-admin has passwords stripped
   viewFor(user) {
     if (!db.state) return {};
@@ -252,8 +273,9 @@ class AuthService {
 
     const users = (db.state && Array.isArray(db.state.users)) ? db.state.users : [];
 
-    // 1. Check exact/case-insensitive username match
-    let found = users.find(u => u && u.u && u.u.toLowerCase() === qLower);
+    // 1. Check exact username match first, then case-insensitive
+    let found = users.find(u => u && u.u && u.u === q) ||
+                users.find(u => u && u.u && u.u.toLowerCase() === qLower);
     if (found) return { user: found, matchedBy: 'username' };
 
     // 2. Check email match
@@ -375,16 +397,22 @@ class AuthService {
       message = `Mã xác thực OTP đã được gửi đến email ${maskedTarget}.`;
     }
 
-    return {
+    const resultObj = {
       success: true,
       status: 200,
       username: user.u,
       name: user.name,
       method,
       maskedTarget,
-      otp, // Provided for fast fill / local environment verification
       message
     };
+
+    // Only expose raw OTP in test environment for automated test suites
+    if (config.NODE_ENV === 'test') {
+      resultObj.otp = otp;
+    }
+
+    return resultObj;
   }
 
   // Verify OTP and reset password
@@ -444,9 +472,12 @@ class AuthService {
     // Update password
     user.p = p;
     // Clear lockout
+    this.fails.delete(u.toLowerCase());
     this.fails.delete(u);
     // Clear reset OTP record
     this.resetOtps.delete(u);
+    // Invalidate all existing active sessions of this user
+    this.revokeSessionsForUser(user.u);
 
     // Persist changes
     db.bump();

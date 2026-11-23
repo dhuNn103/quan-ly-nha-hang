@@ -4,7 +4,7 @@ function canCompress(req, contentSize) {
   // Only compress if payload is greater than 1KB
   if (contentSize < 1024) return false;
   const accept = req.headers['accept-encoding'] || '';
-  return accept.includes('gzip') || accept.includes('deflate');
+  return accept.includes('br') || accept.includes('gzip') || accept.includes('deflate');
 }
 
 function sendCompressedJson(req, res, statusCode, obj) {
@@ -14,33 +14,60 @@ function sendCompressedJson(req, res, statusCode, obj) {
 
   res.setHeader('Content-Type', 'application/json; charset=utf-8');
 
+  // 1. Brotli compression (highest priority, best compression ratio)
+  if (buffer.length > 1024 && accept.includes('br') && typeof zlib.brotliCompress === 'function') {
+    res.setHeader('Content-Encoding', 'br');
+    res.setHeader('Vary', 'Accept-Encoding');
+    res.writeHead(statusCode);
+    zlib.brotliCompress(buffer, {
+      params: {
+        [zlib.constants.BROTLI_PARAM_QUALITY]: 4, // Fast dynamic quality
+        [zlib.constants.BROTLI_PARAM_MODE]: zlib.constants.BROTLI_MODE_TEXT
+      }
+    }, (err, compressed) => {
+      if (err) {
+        res.end(buffer);
+      } else {
+        res.end(compressed);
+      }
+    });
+    return;
+  }
+
+  // 2. Gzip compression
   if (buffer.length > 1024 && accept.includes('gzip')) {
     res.setHeader('Content-Encoding', 'gzip');
     res.setHeader('Vary', 'Accept-Encoding');
     res.writeHead(statusCode);
-    zlib.gzip(buffer, (err, compressed) => {
+    zlib.gzip(buffer, { level: 6 }, (err, compressed) => {
       if (err) {
         res.end(buffer);
       } else {
         res.end(compressed);
       }
     });
-  } else if (buffer.length > 1024 && accept.includes('deflate')) {
+    return;
+  }
+
+  // 3. Deflate compression
+  if (buffer.length > 1024 && accept.includes('deflate')) {
     res.setHeader('Content-Encoding', 'deflate');
     res.setHeader('Vary', 'Accept-Encoding');
     res.writeHead(statusCode);
-    zlib.deflate(buffer, (err, compressed) => {
+    zlib.deflate(buffer, { level: 6 }, (err, compressed) => {
       if (err) {
         res.end(buffer);
       } else {
         res.end(compressed);
       }
     });
-  } else {
-    res.setHeader('Content-Length', buffer.length);
-    res.writeHead(statusCode);
-    res.end(buffer);
+    return;
   }
+
+  // 4. Uncompressed fallback
+  res.setHeader('Content-Length', buffer.length);
+  res.writeHead(statusCode);
+  res.end(buffer);
 }
 
 module.exports = {
