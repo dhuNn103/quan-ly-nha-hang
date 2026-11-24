@@ -8,7 +8,7 @@
 :root{--bg:#f4f1ea;--fg:#1e2533;--card:#fffdf8;--bd:#e3dccb;--pri:#1f3350;--mut:#7b7565;--w:#b08d4c;--ok:#6f8f6b;--bad:#a8432f;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#161a24;--fg:#ece7da;--card:#1f2533;--bd:#363e52;--pri:#5a78a8;--mut:#a9a392;--w:#c9a867;--bad:#e7917f}}
 :root[data-theme=dark]{--bg:#161a24;--fg:#ece7da;--card:#1f2533;--bd:#363e52;--pri:#5a78a8;--mut:#a9a392;--w:#c9a867;--bad:#e7917f}
-html,body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.45 "Noto Sans", system-ui, -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;font-family:"Noto Sans", system-ui, -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif}
+html,body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.45 "Noto Sans", system-ui, -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;font-family:"Noto Sans", system-ui, -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;max-width:100vw;overflow-x:hidden;box-sizing:border-box}
 *{box-sizing:border-box}h3,h4{margin:.4em 0}small,.mut{color:var(--mut)}
 /* Performance & Rendering Optimizations */
 .hp-about-sec,.hp-services-sec,.hp-featured-sec,.hp-res-sec,.hp-footer,.hp-aboutpage-story-sec,.hp-aboutpage-pillars-sec,.hp-aboutpage-chef-sec,.hp-aboutpage-stats-sec,.hp-membership-tiers,.hp-promotions-grid,.hp-recruitment-grid{content-visibility:auto;contain-intrinsic-size:0 400px}
@@ -1358,8 +1358,8 @@ return`<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px">${['',
 function cartRow(c,i){return`<span>${esc(c.name)}<br><small>${money(c.price)}</small></span><span><button onclick="cq(${i},-1)"><i class="fa-solid fa-minus"></i></button> <b>${c.qty}</b> <button onclick="cq(${i},1)"><i class="fa-solid fa-plus"></i></button> <button class=x onclick="cq(${i},-99)">Bỏ</button></span>`}
 function cq(i,d){const c=cart[i];if(!c)return;c.qty+=d;if(c.qty<=0)cart.splice(i,1);QR?render():drawT()}
 /* ===== Bổ sung v6: giao diện theo thiết bị, ứng dụng phục vụ, tìm kiếm, bán chạy, hết nguyên liệu ===== */
-document.head.insertAdjacentHTML('beforeend','<style>.wg{display:grid;gap:12px;grid-template-columns:repeat(3,1fr)}[data-dev=desktop] #app,[data-dev=tablet] #app{flex-direction:row}[data-dev=tablet] .wg{grid-template-columns:1fr 1fr}[data-dev=tablet] aside{width:176px;position:sticky;top:0;height:100vh;overflow:auto}[data-dev=tablet] .pos{grid-template-columns:1fr 1.5fr}[data-dev=tablet] .stats{grid-template-columns:repeat(4,1fr)}[data-dev=tablet] .tabs{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}[data-dev=tablet] button,[data-dev=tablet] select,[data-dev=tablet] input,[data-dev=phone] button,[data-dev=phone] select,[data-dev=phone] input{min-height:42px}[data-dev=phone] input,[data-dev=phone] select{font-size:16px}[data-dev=phone] .wg,[data-dev=phone] .pos{grid-template-columns:1fr}[data-dev=phone] #app{flex-direction:column;padding-bottom:72px}[data-dev=phone] aside{position:fixed;left:0;right:0;bottom:0;width:auto;z-index:8;display:flex;gap:4px;overflow-x:auto;padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px));border-right:0;border-top:1px solid var(--bd)}[data-dev=phone] aside>:not(a){display:none}[data-dev=phone] aside a{flex:none;white-space:nowrap;padding:9px 12px}[data-dev=phone] main{padding:10px}[data-dev=phone] .stats{grid-template-columns:1fr 1fr}[data-dev=phone] .tabs{grid-template-columns:repeat(2,1fr)}[data-dev=phone] #modal{padding:0;align-items:flex-end}[data-dev=phone] #modal>div{width:100%;max-height:94vh;border-radius:14px 14px 0 0}[data-dev=phone] .menu{grid-template-columns:repeat(2,1fr)}</style>');
-function devType(){const u=navigator.userAgent,w=innerWidth;if(/iPhone|iPod|Android.+Mobile/.test(u)||w<640)return'phone';if(/iPad|Tablet|Android/.test(u)||(navigator.platform=='MacIntel'&&navigator.maxTouchPoints>1)||w<1024)return'tablet';return'desktop'}
+document.head.insertAdjacentHTML('beforeend','<style>.wg{display:grid;gap:12px;grid-template-columns:repeat(3,1fr)}[data-dev=desktop] #app,[data-dev=tablet] #app{flex-direction:row}[data-dev=tablet] .wg{grid-template-columns:1fr 1fr}[data-dev=tablet] aside{width:176px;position:sticky;top:0;height:100vh;overflow:auto}[data-dev=tablet] .pos{grid-template-columns:1fr 1.5fr}[data-dev=tablet] .stats{grid-template-columns:repeat(4,1fr)}[data-dev=tablet] .tabs{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}[data-dev=tablet] button,[data-dev=tablet] select,[data-dev=tablet] input,[data-dev=phone] button,[data-dev=phone] select,[data-dev=phone] input{min-height:42px}[data-dev=phone] input,[data-dev=phone] select{font-size:16px}[data-dev=phone] .wg,[data-dev=phone] .pos{grid-template-columns:1fr}[data-dev=phone] #app{flex-direction:column;padding-bottom:72px}[data-dev=phone] aside{position:fixed;left:0;right:0;bottom:0;width:auto;z-index:8;display:flex;gap:4px;overflow-x:auto;padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px));border-right:0;border-top:1px solid var(--bd)}[data-dev=phone] aside>:not(a){display:none}[data-dev=phone] aside a{flex:none;white-space:nowrap;padding:9px 12px}[data-dev=phone] main{padding:10px}[data-dev=phone] .stats{grid-template-columns:1fr 1fr}[data-dev=phone] .tabs{grid-template-columns:repeat(2,1fr)}[data-dev=phone] #modal{padding:10px;align-items:center;justify-content:center}[data-dev=phone] #modal>div{width:min(560px,calc(100vw - 20px));max-width:100%;max-height:75vh;max-height:75dvh;border-radius:16px;margin:auto}[data-dev=phone] .menu{grid-template-columns:repeat(2,1fr)}</style>');
+function devType(){const u=navigator.userAgent,w=Math.min(innerWidth,document.documentElement.clientWidth||innerWidth);if(/iPhone|iPod|Android.+Mobile/.test(u)||w<=850)return'phone';if(/iPad|Tablet|Android/.test(u)||(navigator.platform=='MacIntel'&&navigator.maxTouchPoints>1)||w<1024)return'tablet';return'desktop'}
 const setDev=()=>document.documentElement.dataset.dev=devType();setDev();addEventListener('resize',setDev);addEventListener('orientationchange',setDev);
 const norm=s=>String(s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d').toLowerCase();
 let mq='',wq='';
@@ -1816,8 +1816,7 @@ return`<div class=cg><div><h3 class=ph>Cài đặt nhà hàng & Hoạt động</
     ${UiKit.grid({
       cols: 4,
       className: 'uikit-grid-settings-tax',
-      gap: 12,
-      style: 'grid-template-columns: 100px 130px 145px minmax(120px, 1fr);',
+      gap: 10,
       content: `
         ${UiKit.input({ id: 'cv', label: 'VAT (%)', type: 'number', min: 0, max: 100, step: 'any', value: V(c.vat), icon: 'fa-solid fa-percent', onkeydown: "if(['-','+','e','E'].includes(event.key))event.preventDefault()", oninput: "if(+this.value<0)this.value=0;if(+this.value>100)this.value=100" })}
         ${UiKit.input({ id: 'cs2', label: 'Phí dịch vụ (%)', type: 'number', min: 0, max: 100, step: 'any', value: V(c.svc), icon: 'fa-solid fa-bell-concierge', onkeydown: "if(['-','+','e','E'].includes(event.key))event.preventDefault()", oninput: "if(+this.value<0)this.value=0;if(+this.value>100)this.value=100" })}
@@ -2914,7 +2913,7 @@ modal(`<div class=v2o-hd><div><div class=v2o-title style="display:inline-flex;al
 ${t.st=='clean'?`<div class=v2o-clean><span>Khách đã rời bàn. Dọn xong thì trả bàn về trạng thái trống.</span><button class=p onclick="cleaned()"><i class="fa-solid fa-check"></i> Dọn xong, trả bàn trống</button></div>`:''}
 <div class=v2o-body><section class=v2o-menu>${t.st=='clean'?'<div class=v2o-empty><i class="fa-solid fa-broom"></i><p>Bàn đang dọn, chưa gọi món được.</p></div>':v2oMenu()}</section><div class=v2o-side>${t.st=='clean'?'':v2oCart()}${v2oOrders(os)}</div></div>
 <div class=v2o-ft><div><span class=v2o-sub>Tạm tính</span><b>${money(tot)}</b></div>${os.length?'<button class=p onclick="payM()"><i class="fa-solid fa-cash-register"></i> Thanh toán</button>':''}</div>`);
-const d=document.querySelector('#modal>div');if(d&&devType()!='phone')d.style.width='min(980px,96vw)';}
+const d=document.querySelector('#modal>div');if(d){d.style.width=(devType()=='phone'?'min(560px,calc(100vw - 20px))':'min(980px,96vw)');}}
 /* ===== Bổ sung v32: sửa giao diện điện thoại cho phục vụ ===== */
 document.head.insertAdjacentHTML('beforeend',`<style>
 .v2o-tabs{display:none;gap:8px;margin:0 0 12px}
@@ -2925,8 +2924,8 @@ html[data-dev=phone] .v2o-tabs{display:flex}
 html[data-dev=phone] .v2o-body[data-tab=menu] .v2o-side{display:none}
 html[data-dev=phone] .v2o-body[data-tab=order] .v2o-menu{display:none}
 html[data-dev=phone] .v2o-grid{max-height:none;overflow:visible}
-html[data-dev=phone] .v2o-hd{margin:-16px -16px 12px;padding:16px 16px 12px;border-radius:0}
-html[data-dev=phone] .v2o-ft{margin:14px -16px -16px}
+html[data-dev=phone] .v2o-hd{margin:-16px -16px 12px;padding:16px 16px 12px;border-radius:16px 16px 0 0}
+html[data-dev=phone] .v2o-ft{margin:14px -16px -16px;border-radius:0 0 16px 16px}
 html[data-dev=phone] #modal.on~#hbg{display:none!important}
 html[data-dev=phone] aside{box-shadow:none!important}
 html[data-dev=phone] body.drawer aside{box-shadow:0 0 24px #0004!important;padding-top:0px!important}
@@ -2944,7 +2943,7 @@ ${t.st=='clean'?`<div class=v2o-clean><span>Khách đã rời bàn. Dọn xong t
 <div class=v2o-tabs><button class="${v2oTab=='menu'?'on':''}" onclick="v2oSetTab('menu')"><i class="fa-solid fa-utensils"></i> Thực đơn</button><button class="${v2oTab=='order'?'on':''}" onclick="v2oSetTab('order')"><i class="fa-solid fa-receipt"></i> Đơn${nNew?` · ${nNew} mới`:''}${os.length?` · ${os.length} đơn`:''}</button></div>
 <div class=v2o-body data-tab="${v2oTab}"><section class=v2o-menu>${t.st=='clean'?'<div class=v2o-empty><i class="fa-solid fa-broom"></i><p>Bàn đang dọn, chưa gọi món được.</p></div>':v2oMenu()}</section><div class=v2o-side>${t.st=='clean'?'':v2oCart()}${v2oOrders(os)}</div></div>
 <div class=v2o-ft><div><span class=v2o-sub>Tạm tính</span><b>${money(tot)}</b></div>${os.length?'<button class=p onclick="payM()"><i class="fa-solid fa-cash-register"></i> Thanh toán</button>':''}</div>`);
-const d=document.querySelector('#modal>div');if(d){if(devType()!='phone')d.style.width='min(980px,96vw)';d.scrollTop=st0}}
+const d=document.querySelector('#modal>div');if(d){d.style.width=(devType()=='phone'?'min(560px,calc(100vw - 20px))':'min(980px,96vw)');d.scrollTop=st0}}
 /* ===== Bổ sung v33: Sơ đồ bàn và Quản lý bàn phân trang 5 hàng, ô tìm bàn ===== */
 document.head.insertAdjacentHTML('beforeend',`<style>
 .v2-tlist{border:1px solid var(--bd);border-radius:14px;overflow:hidden;background:var(--card)}
@@ -6947,35 +6946,819 @@ body.home-page:has(.hp-preview-banner) .hp-header {
 .uikit-grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .uikit-grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .uikit-grid-settings-tax {
-  grid-template-columns: 100px 130px 145px minmax(120px, 1fr) !important;
-  align-items: start;
-}
-.uikit-grid-settings-tax .uikit-label {
-  white-space: nowrap !important;
-}
-.uikit-grid-settings-tax .uikit-label-row {
-  height: 22px;
-  line-height: 22px;
-  display: flex;
-  align-items: center;
+  display: grid !important;
+  grid-template-columns: minmax(75px, 0.85fr) minmax(105px, 1.15fr) minmax(105px, 1.15fr) minmax(120px, 1.4fr) !important;
+  gap: 10px !important;
+  align-items: start !important;
 }
 .uikit-grid-settings-tax .uikit-field {
-  margin-bottom: 0;
+  min-width: 0 !important;
+  margin-bottom: 0 !important;
 }
-@media (max-width: 900px) {
-  .uikit-grid-settings-tax {
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+.uikit-grid-settings-tax .uikit-label-row {
+  height: 22px !important;
+  line-height: 22px !important;
+  display: flex !important;
+  align-items: center !important;
+  margin-bottom: 6px !important;
+  overflow: hidden !important;
+}
+.uikit-grid-settings-tax .uikit-label {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  color: #334155 !important;
+}
+.uikit-grid-settings-tax .uikit-label-icon {
+  font-size: 11px !important;
+  color: #b8863b !important;
+  flex-shrink: 0 !important;
+}
+.uikit-grid-settings-tax input.uikit-input {
+  height: 42px !important;
+  padding: 0 10px !important;
+  font-size: 13.5px !important;
+  box-sizing: border-box !important;
+}
+@media (max-width: 1100px) {
+  .cg {
+    grid-template-columns: 1fr !important;
+    gap: 18px !important;
   }
 }
-@media (max-width: 500px) {
+@media (max-width: 768px) {
+  .uikit-grid-settings-tax {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 12px 10px !important;
+  }
+}
+@media (max-width: 420px) {
   .uikit-grid-settings-tax {
     grid-template-columns: 1fr !important;
+    gap: 10px !important;
   }
 }
 @media (max-width: 768px) {
   .uikit-grid-2, .uikit-grid-3, .uikit-grid-4 {
     grid-template-columns: 1fr;
   }
+
+  /* Modal centered in viewport on mobile devices (height max 75dvh) */
+  #modal, #dlg {
+    padding: 10px !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  #modal > div, #dlg > .box, #dlg > div {
+    width: min(560px, calc(100vw - 20px)) !important;
+    max-width: 100% !important;
+    max-height: 75vh !important;
+    max-height: 75dvh !important;
+    border-radius: 16px !important;
+    margin: auto !important;
+    padding: 16px 14px !important;
+    box-sizing: border-box !important;
+    box-shadow: 0 16px 40px rgba(0,0,0,0.35) !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  #modal .row {
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+  #modal .row input, #modal .row select {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  #modal button {
+    min-height: 40px !important;
+  }
+
+  /* POS Order Modal responsive layout */
+  .v2o-tabs {
+    display: flex !important;
+    gap: 8px !important;
+    margin: 0 0 12px !important;
+  }
+  .v2o-tabs button {
+    flex: 1 !important;
+    min-height: 42px !important;
+    border-radius: 10px !important;
+    font-weight: 600 !important;
+  }
+  .v2o-body {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+  .v2o-body[data-tab=menu] .v2o-side {
+    display: none !important;
+  }
+  .v2o-body[data-tab=order] .v2o-menu {
+    display: none !important;
+  }
+  .v2o-menu, .v2o-side {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+  .v2o-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+  .v2o-card {
+    padding: 8px !important;
+    border-radius: 10px !important;
+  }
+  .v2o-img {
+    height: 72px !important;
+  }
+  .v2o-hd {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+    margin: -14px -14px 12px !important;
+    padding: 14px 14px 10px !important;
+    border-radius: 20px 20px 0 0 !important;
+  }
+  .v2o-hd > div:first-child {
+    width: 100% !important;
+  }
+  .v2o-hacts {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: flex-end !important;
+    align-items: center !important;
+    gap: 6px !important;
+    flex-wrap: wrap !important;
+  }
+  .v2o-hacts button {
+    font-size: 13px !important;
+    padding: 7px 10px !important;
+  }
+  .v2o-hacts button.ib {
+    flex: 0 0 36px !important;
+    width: 36px !important;
+    height: 36px !important;
+    padding: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  .v2o-ft {
+    margin: 14px -14px calc(-14px - env(safe-area-inset-bottom, 0px)) !important;
+    padding: 12px 14px !important;
+    flex-wrap: wrap !important;
+    gap: 10px !important;
+  }
+  .v2o-ft > div {
+    flex: 1 1 auto !important;
+  }
+  .v2o-ft button.p {
+    flex: 1 1 auto !important;
+    min-height: 42px !important;
+    justify-content: center !important;
+  }
+
+  /* POS Tables & Layout: 2 columns on mobile */
+  .v2-pos {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+  .v2-tiles {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+  }
+  .tabs {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+  }
+  .pos-type-filter {
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    padding-bottom: 6px !important;
+  }
+  .pos-type-filter button {
+    flex: 0 0 auto !important;
+    white-space: nowrap !important;
+  }
+
+  /* Customer QR Order View & Login Form */
+  .qo {
+    width: 100% !important;
+    max-width: 520px !important;
+    margin: 0 auto !important;
+    box-sizing: border-box !important;
+  }
+  .qo-bar2 {
+    width: calc(100% - 24px) !important;
+    max-width: 496px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    box-sizing: border-box !important;
+  }
+  .qo-sheet {
+    width: 100% !important;
+    max-width: 520px !important;
+    box-sizing: border-box !important;
+    border-radius: 20px 20px 0 0 !important;
+  }
+  .login {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 14px !important;
+    margin: 10px auto !important;
+    box-sizing: border-box !important;
+  }
+  .login .menu {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+  }
+  .login-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    padding: 20px 16px !important;
+  }
+  .qrs {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+  }
+
+  /* Layout & Sidebar on Mobile */
+  #app {
+    flex-direction: column !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
+  }
+  aside, body.col aside, html[data-dev=phone] aside {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    bottom: 0 !important;
+    width: 260px !important;
+    max-width: 80vw !important;
+    transform: translateX(-105%) !important;
+    z-index: 9999 !important;
+    transition: transform .25s ease !important;
+    box-shadow: 4px 0 20px rgba(0,0,0,0.15) !important;
+  }
+  body.drawer aside, body.col.drawer aside, html[data-dev=phone] body.drawer aside {
+    transform: translateX(0) !important;
+  }
+  main {
+    width: 100% !important;
+    max-width: 100vw !important;
+    padding: 12px !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+    min-width: 0 !important;
+    overflow-x: hidden !important;
+  }
+
+  /* Overview Dashboard on Mobile */
+  .ov-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    overflow-x: hidden !important;
+    gap: 12px !important;
+  }
+  .ov-header {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 12px !important;
+    padding: 12px 14px !important;
+    border-radius: 14px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  .ov-header-left {
+    width: 100% !important;
+    max-width: 100% !important;
+    gap: 10px !important;
+  }
+  .ov-title-box {
+    min-width: 0 !important;
+    flex: 1 1 auto !important;
+  }
+  .ov-title-box h3 {
+    font-size: 15px !important;
+    flex-wrap: wrap !important;
+    white-space: normal !important;
+    word-break: break-word !important;
+    gap: 6px !important;
+  }
+  .ov-date-sub {
+    font-size: 11.5px !important;
+    white-space: normal !important;
+  }
+  .ov-header-actions {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    flex-wrap: wrap !important;
+  }
+  .ov-btn-act {
+    width: 100% !important;
+    min-height: 40px !important;
+    height: auto !important;
+    padding: 8px 6px !important;
+    justify-content: center !important;
+    font-size: 12.5px !important;
+    border-radius: 8px !important;
+    box-sizing: border-box !important;
+    white-space: nowrap !important;
+    text-align: center !important;
+  }
+  .ov-kpi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+    width: 100% !important;
+  }
+  .ov-kpi-card {
+    padding: 12px 14px !important;
+    border-radius: 12px !important;
+  }
+  .ov-kpi-val {
+    font-size: 18px !important;
+  }
+  .ov-col {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    overflow: hidden !important;
+  }
+  .ov-main-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 12px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+  .ov-card, .ov-card-trend {
+    padding: 12px 14px !important;
+    border-radius: 12px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+  }
+  .ov-card-head {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 6px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    padding-bottom: 8px !important;
+    margin-bottom: 10px !important;
+  }
+  .ov-card-head h4 {
+    font-size: 14px !important;
+    white-space: normal !important;
+    word-break: break-word !important;
+    line-height: 1.3 !important;
+    gap: 6px !important;
+    color: var(--fg) !important;
+  }
+  .ov-card-head .ov-more-link, .ov-card-head .tag {
+    font-size: 12px !important;
+    align-self: flex-start !important;
+    white-space: normal !important;
+  }
+  .ov-trend-head {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 6px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    margin-bottom: 10px !important;
+  }
+  .ov-trend-title {
+    font-size: 14px !important;
+    white-space: normal !important;
+    word-break: break-word !important;
+    line-height: 1.3 !important;
+    gap: 6px !important;
+    color: var(--fg) !important;
+  }
+  .ov-trend-today-badge {
+    align-self: flex-start !important;
+    font-size: 12px !important;
+    padding: 3px 8px !important;
+    border-radius: 6px !important;
+    background: var(--card) !important;
+    border: 1.5px solid var(--bd) !important;
+    color: var(--fg) !important;
+  }
+  .ov-trend-chart-scroll {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    box-sizing: border-box !important;
+  }
+  .ov-trend-chart-box {
+    display: flex !important;
+    gap: 4px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    height: 145px !important;
+    margin-bottom: 4px !important;
+  }
+  .ov-trend-yaxis {
+    width: 20px !important;
+    font-size: 10px !important;
+    flex-shrink: 0 !important;
+    color: var(--mut) !important;
+  }
+  .ov-trend-stage {
+    flex: 1 !important;
+    min-width: 0 !important;
+    position: relative !important;
+  }
+  .ov-trend-bars {
+    gap: 4px !important;
+    padding: 0 2px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  .ov-trend-bar-col {
+    min-width: 0 !important;
+    flex: 1 !important;
+  }
+  .ov-trend-bar {
+    max-width: 26px !important;
+    width: 100% !important;
+    border-radius: 4px 4px 0 0 !important;
+  }
+  .ov-trend-bar-val {
+    font-size: 9px !important;
+    padding: 1px 3px !important;
+  }
+  .ov-trend-labels-row {
+    display: flex !important;
+    gap: 4px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    margin-bottom: 8px !important;
+  }
+  .ov-trend-yaxis-spacer {
+    width: 20px !important;
+    flex-shrink: 0 !important;
+  }
+  .ov-trend-labels {
+    flex: 1 !important;
+    min-width: 0 !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    gap: 4px !important;
+    padding: 0 2px !important;
+    box-sizing: border-box !important;
+  }
+  .ov-trend-lbl {
+    flex: 1 !important;
+    min-width: 0 !important;
+    font-size: 9.5px !important;
+    text-align: center !important;
+    white-space: normal !important;
+    word-break: break-all !important;
+    line-height: 1.15 !important;
+    color: var(--mut) !important;
+  }
+  .ov-trend-lbl.is-today {
+    font-size: 9px !important;
+    font-weight: 700 !important;
+    color: var(--fg) !important;
+  }
+  .ov-trend-lbl.is-today .ov-trend-subdate {
+    font-size: 8px !important;
+    white-space: nowrap !important;
+    color: var(--mut) !important;
+  }
+  .ov-trend-footer {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 6px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    padding-top: 10px !important;
+  }
+  .ov-trend-footer-total {
+    font-size: 12.5px !important;
+    color: var(--mut) !important;
+  }
+  .ov-trend-footer-total b {
+    color: var(--fg) !important;
+  }
+  .ov-trend-footer-link {
+    font-size: 12px !important;
+    align-self: flex-start !important;
+    white-space: normal !important;
+    color: var(--pri) !important;
+  }
+  .ov-space-group {
+    width: 100% !important;
+    box-sizing: border-box !important;
+    margin-bottom: 10px !important;
+  }
+  .ov-space-title {
+    font-size: 12px !important;
+    margin-bottom: 6px !important;
+  }
+  .ov-space-tables {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  .ov-tbl-chip {
+    padding: 5px 8px !important;
+    font-size: 11px !important;
+    gap: 4px !important;
+    border-radius: 6px !important;
+    flex: 0 0 auto !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+}
+html[data-dev=phone] #modal, html[data-dev=phone] #dlg {
+  padding: 10px !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+html[data-dev=phone] #modal > div, html[data-dev=phone] #dlg > .box, html[data-dev=phone] #dlg > div {
+  width: min(560px, calc(100vw - 20px)) !important;
+  max-width: 100% !important;
+  max-height: 75vh !important;
+  max-height: 75dvh !important;
+  border-radius: 16px !important;
+  margin: auto !important;
+  padding: 16px 14px !important;
+  box-sizing: border-box !important;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.35) !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+html[data-dev=phone] .ov-container, html[data-dev=tablet] .ov-container {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  overflow-x: hidden !important;
+  gap: 12px !important;
+  box-sizing: border-box !important;
+}
+html[data-dev=phone] .ov-main-grid, html[data-dev=tablet] .ov-main-grid {
+  grid-template-columns: minmax(0, 1fr) !important;
+  gap: 12px !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+}
+html[data-dev=phone] .ov-col, html[data-dev=tablet] .ov-col {
+  min-width: 0 !important;
+  max-width: 100% !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+  overflow: hidden !important;
+}
+html[data-dev=phone] .ov-card, html[data-dev=tablet] .ov-card,
+html[data-dev=phone] .ov-card-trend, html[data-dev=tablet] .ov-card-trend {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+  padding: 12px 14px !important;
+  border-radius: 12px !important;
+}
+html[data-dev=phone] .ov-trend-head, html[data-dev=tablet] .ov-trend-head,
+html[data-dev=phone] .ov-card-head, html[data-dev=tablet] .ov-card-head,
+html[data-dev=phone] .ov-trend-footer, html[data-dev=tablet] .ov-trend-footer {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  gap: 6px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+html[data-dev=phone] .ov-trend-title, html[data-dev=tablet] .ov-trend-title,
+html[data-dev=phone] .ov-card-head h4, html[data-dev=tablet] .ov-card-head h4 {
+  font-size: 14px !important;
+  white-space: normal !important;
+  word-break: break-word !important;
+  line-height: 1.3 !important;
+  gap: 6px !important;
+  color: var(--fg) !important;
+  margin: 0 !important;
+}
+html[data-dev=phone] .ov-trend-today-badge, html[data-dev=tablet] .ov-trend-today-badge {
+  align-self: flex-start !important;
+  font-size: 12px !important;
+  padding: 3px 8px !important;
+  border-radius: 6px !important;
+  background: var(--card) !important;
+  border: 1.5px solid var(--bd) !important;
+  color: var(--fg) !important;
+  white-space: nowrap !important;
+}
+html[data-dev=phone] .ov-card-head .ov-more-link, html[data-dev=tablet] .ov-card-head .ov-more-link,
+html[data-dev=phone] .ov-card-head .tag, html[data-dev=tablet] .ov-card-head .tag {
+  font-size: 12px !important;
+  align-self: flex-start !important;
+  white-space: normal !important;
+  color: var(--pri) !important;
+  text-decoration: none !important;
+}
+html[data-dev=phone] .ov-trend-chart-scroll, html[data-dev=tablet] .ov-trend-chart-scroll {
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+  box-sizing: border-box !important;
+}
+html[data-dev=phone] .ov-trend-chart-box, html[data-dev=tablet] .ov-trend-chart-box {
+  display: flex !important;
+  gap: 4px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  height: 145px !important;
+  margin-bottom: 4px !important;
+}
+html[data-dev=phone] .ov-trend-yaxis, html[data-dev=tablet] .ov-trend-yaxis {
+  width: 20px !important;
+  font-size: 10px !important;
+  flex-shrink: 0 !important;
+  color: var(--mut) !important;
+}
+html[data-dev=phone] .ov-trend-stage, html[data-dev=tablet] .ov-trend-stage {
+  flex: 1 !important;
+  min-width: 0 !important;
+  position: relative !important;
+}
+html[data-dev=phone] .ov-trend-bars, html[data-dev=tablet] .ov-trend-bars {
+  position: absolute !important;
+  inset: 0 !important;
+  display: flex !important;
+  align-items: flex-end !important;
+  justify-content: space-between !important;
+  gap: 4px !important;
+  padding: 0 2px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+html[data-dev=phone] .ov-trend-bar-col, html[data-dev=tablet] .ov-trend-bar-col {
+  min-width: 0 !important;
+  flex: 1 1 0 !important;
+}
+html[data-dev=phone] .ov-trend-bar, html[data-dev=tablet] .ov-trend-bar {
+  max-width: 26px !important;
+  width: 100% !important;
+  border-radius: 4px 4px 0 0 !important;
+}
+html[data-dev=phone] .ov-trend-labels-row, html[data-dev=tablet] .ov-trend-labels-row {
+  display: flex !important;
+  gap: 4px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  margin-bottom: 8px !important;
+}
+html[data-dev=phone] .ov-trend-yaxis-spacer, html[data-dev=tablet] .ov-trend-yaxis-spacer {
+  width: 20px !important;
+  flex-shrink: 0 !important;
+}
+html[data-dev=phone] .ov-trend-labels, html[data-dev=tablet] .ov-trend-labels {
+  flex: 1 !important;
+  min-width: 0 !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  gap: 4px !important;
+  padding: 0 2px !important;
+  box-sizing: border-box !important;
+}
+html[data-dev=phone] .ov-trend-lbl, html[data-dev=tablet] .ov-trend-lbl {
+  flex: 1 1 0 !important;
+  min-width: 0 !important;
+  font-size: 9.5px !important;
+  text-align: center !important;
+  white-space: normal !important;
+  word-break: normal !important;
+  line-height: 1.15 !important;
+  color: var(--mut) !important;
+}
+html[data-dev=phone] .ov-trend-lbl.is-today, html[data-dev=tablet] .ov-trend-lbl.is-today {
+  font-size: 9px !important;
+  font-weight: 700 !important;
+  color: var(--fg) !important;
+}
+html[data-dev=phone] .ov-trend-lbl.is-today .ov-trend-subdate, html[data-dev=tablet] .ov-trend-lbl.is-today .ov-trend-subdate {
+  font-size: 8px !important;
+  white-space: nowrap !important;
+  color: var(--mut) !important;
+}
+html[data-dev=phone] .ov-trend-footer-total, html[data-dev=tablet] .ov-trend-footer-total {
+  font-size: 12.5px !important;
+  color: var(--mut) !important;
+}
+html[data-dev=phone] .ov-trend-footer-total b, html[data-dev=tablet] .ov-trend-footer-total b {
+  color: var(--fg) !important;
+}
+html[data-dev=phone] .ov-trend-footer-link, html[data-dev=tablet] .ov-trend-footer-link {
+  font-size: 12px !important;
+  align-self: flex-start !important;
+  white-space: normal !important;
+  color: var(--pri) !important;
+  text-decoration: none !important;
+}
+html[data-dev=phone] .ov-space-group, html[data-dev=tablet] .ov-space-group {
+  width: 100% !important;
+  box-sizing: border-box !important;
+  margin-bottom: 10px !important;
+}
+html[data-dev=phone] .ov-space-title, html[data-dev=tablet] .ov-space-title {
+  font-size: 12px !important;
+  margin-bottom: 6px !important;
+}
+html[data-dev=phone] .ov-space-tables, html[data-dev=tablet] .ov-space-tables {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 6px !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+html[data-dev=phone] .ov-tbl-chip, html[data-dev=tablet] .ov-tbl-chip {
+  padding: 5px 8px !important;
+  font-size: 11px !important;
+  gap: 4px !important;
+  border-radius: 6px !important;
+  flex: 0 0 auto !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+html[data-dev=phone] .ov-header, html[data-dev=tablet] .ov-header {
+  flex-direction: column !important;
+  align-items: stretch !important;
+  gap: 12px !important;
+  padding: 12px 14px !important;
+  border-radius: 14px !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+html[data-dev=phone] .ov-header-actions, html[data-dev=tablet] .ov-header-actions {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 8px !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  flex-wrap: wrap !important;
+}
+html[data-dev=phone] .ov-btn-act, html[data-dev=tablet] .ov-btn-act {
+  width: 100% !important;
+  min-height: 40px !important;
+  height: auto !important;
+  padding: 8px 6px !important;
+  justify-content: center !important;
+  font-size: 12.5px !important;
+  border-radius: 8px !important;
+  box-sizing: border-box !important;
+  white-space: nowrap !important;
+  text-align: center !important;
 }
 .uikit-field {
   display: flex;
@@ -18360,67 +19143,67 @@ document.head.insertAdjacentHTML('beforeend', `<style>
   to { opacity: 1; transform: translateY(0); }
 }
 .ov-header {
-  display: flex !important;
-  justify-content: space-between !important;
-  align-items: center !important;
-  gap: 12px !important;
-  flex-wrap: nowrap !important;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
   background: var(--card);
   border: 1px solid var(--bd);
   border-radius: 16px;
-  padding: 12px 18px !important;
+  padding: 12px 18px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.03);
 }
 .ov-header-left {
-  display: flex !important;
-  align-items: center !important;
-  gap: 12px !important;
-  min-width: 0 !important;
-  flex: 1 1 auto !important;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  flex: 1 1 auto;
 }
 .ov-avatar {
-  width: 42px !important;
-  height: 42px !important;
-  min-width: 42px !important;
-  border-radius: 12px !important;
-  background: linear-gradient(135deg, var(--pri), color-mix(in srgb, var(--pri) 70%, #2563eb)) !important;
-  color: #fff !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  font-size: 18px !important;
-  flex-shrink: 0 !important;
-  box-shadow: 0 4px 12px rgba(31,51,80,0.18) !important;
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--pri), color-mix(in srgb, var(--pri) 70%, #2563eb));
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(31,51,80,0.18);
 }
 .ov-title-box {
-  min-width: 0 !important;
+  min-width: 0;
 }
 .ov-title-box h3 {
-  margin: 0 !important;
-  font-size: 17px !important;
-  font-weight: 700 !important;
-  display: flex !important;
-  align-items: center !important;
-  gap: 8px !important;
-  white-space: nowrap !important;
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
 }
 .ov-role-badge {
-  font-size: 11px !important;
-  font-weight: 700 !important;
-  text-transform: uppercase !important;
-  padding: 2px 7px !important;
-  border-radius: 6px !important;
-  background: color-mix(in srgb, var(--w) 18%, var(--card)) !important;
-  color: var(--w) !important;
-  border: 1px solid color-mix(in srgb, var(--w) 35%, var(--bd)) !important;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--w) 18%, var(--card));
+  color: var(--w);
+  border: 1px solid color-mix(in srgb, var(--w) 35%, var(--bd));
 }
 .ov-date-sub {
-  font-size: 12px !important;
-  color: var(--mut) !important;
-  margin-top: 2px !important;
-  white-space: nowrap !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
+  font-size: 12px;
+  color: var(--mut);
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 @media (max-width: 1250px) {
   .ov-date-desc {
@@ -18428,27 +19211,27 @@ document.head.insertAdjacentHTML('beforeend', `<style>
   }
 }
 .ov-header-actions {
-  display: flex !important;
-  gap: 7px !important;
-  align-items: center !important;
-  flex-wrap: nowrap !important;
-  flex-shrink: 0 !important;
+  display: flex;
+  gap: 7px;
+  align-items: center;
+  flex-wrap: wrap;
+  flex-shrink: 0;
 }
 .ov-btn-act {
-  display: inline-flex !important;
-  align-items: center !important;
-  gap: 5px !important;
-  padding: 7px 11px !important;
-  border-radius: 8px !important;
-  font-weight: 600 !important;
-  font-size: 12.5px !important;
-  cursor: pointer !important;
-  transition: all 0.15s ease !important;
-  border: 1px solid var(--bd) !important;
-  background: var(--card) !important;
-  color: var(--fg) !important;
-  white-space: nowrap !important;
-  flex-shrink: 0 !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 11px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 12.5px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border: 1px solid var(--bd);
+  background: var(--card);
+  color: var(--fg);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 .ov-btn-act:hover {
   background: color-mix(in srgb, var(--pri) 8%, var(--card)) !important;
@@ -18603,7 +19386,7 @@ document.head.insertAdjacentHTML('beforeend', `<style>
   margin: 0;
   font-size: 15px;
   font-weight: 700;
-  color: #1e2533;
+  color: var(--fg);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -18614,17 +19397,21 @@ document.head.insertAdjacentHTML('beforeend', `<style>
   font-size: 15px;
 }
 .ov-trend-today-badge {
-  background: #ffffff;
-  border: 1.5px solid #e2e8f0;
+  background: var(--card);
+  border: 1.5px solid var(--bd);
   border-radius: 8px;
   padding: 4px 10px;
   font-size: 13px;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--fg);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   display: inline-flex;
   align-items: center;
   white-space: nowrap;
+}
+.ov-trend-chart-scroll {
+  width: 100%;
+  box-sizing: border-box;
 }
 .ov-trend-chart-box {
   display: flex;
@@ -18748,18 +19535,18 @@ document.head.insertAdjacentHTML('beforeend', `<style>
   flex: 1;
   font-size: 11px;
   font-weight: 500;
-  color: #475569;
+  color: var(--mut);
   text-align: center;
   line-height: 1.25;
   white-space: nowrap !important;
 }
 .ov-trend-lbl.is-today {
   font-weight: 700;
-  color: #1e2533;
+  color: var(--fg);
 }
 .ov-trend-subdate {
   font-size: 10px;
-  color: #64748b;
+  color: var(--mut);
   font-weight: 400;
   white-space: nowrap !important;
 }
@@ -18768,23 +19555,23 @@ document.head.insertAdjacentHTML('beforeend', `<style>
   justify-content: space-between;
   align-items: center;
   font-size: 13px;
-  color: #475569;
+  color: var(--mut);
   padding-top: 12px;
   margin-top: 4px;
   border-top: 1px solid rgba(0,0,0,0.06);
 }
 .ov-trend-footer-total {
   font-size: 13px;
-  color: #334155;
+  color: var(--mut);
 }
 .ov-trend-footer-total b {
   font-weight: 700;
-  color: #0f172a;
+  color: var(--fg);
 }
 .ov-trend-footer-link {
   font-size: 12.5px;
   font-weight: 600;
-  color: #1e2533;
+  color: var(--pri);
   text-decoration: none;
   cursor: pointer;
   display: inline-flex;
@@ -18794,7 +19581,7 @@ document.head.insertAdjacentHTML('beforeend', `<style>
   transition: color 0.15s ease;
 }
 .ov-trend-footer-link:hover {
-  color: #b8863b;
+  color: var(--pri);
   text-decoration: underline;
 }
 
@@ -18989,30 +19776,540 @@ document.head.insertAdjacentHTML('beforeend', `<style>
   flex-shrink: 0;
 }
 
-/* Mobile responsive */
-@media(max-width: 960px) {
-  .ov-kpi-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  .ov-main-grid {
-    grid-template-columns: 1fr;
-  }
-}
-@media(max-width: 540px) {
-  .ov-kpi-grid {
-    grid-template-columns: 1fr;
+/* Mobile and Tablet responsive */
+@media(max-width: 1024px) {
+  .ov-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    overflow-x: hidden !important;
+    gap: 12px !important;
   }
   .ov-header {
-    flex-direction: column;
-    align-items: stretch;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 12px !important;
+    padding: 12px 14px !important;
+    border-radius: 14px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  .ov-header-left {
+    width: 100% !important;
+    max-width: 100% !important;
+    gap: 10px !important;
+  }
+  .ov-title-box {
+    min-width: 0 !important;
+    flex: 1 1 auto !important;
+  }
+  .ov-title-box h3 {
+    font-size: 15px !important;
+    flex-wrap: wrap !important;
+    white-space: normal !important;
+    word-break: break-word !important;
+    gap: 6px !important;
+  }
+  .ov-date-sub {
+    font-size: 11.5px !important;
+    white-space: normal !important;
   }
   .ov-header-actions {
-    justify-content: stretch;
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    flex-wrap: wrap !important;
   }
   .ov-btn-act {
-    flex: 1;
-    justify-content: center;
+    width: 100% !important;
+    min-height: 40px !important;
+    height: auto !important;
+    padding: 8px 6px !important;
+    justify-content: center !important;
+    font-size: 12.5px !important;
+    border-radius: 8px !important;
+    box-sizing: border-box !important;
+    white-space: nowrap !important;
+    text-align: center !important;
   }
+  .ov-kpi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+    width: 100% !important;
+  }
+  .ov-kpi-card {
+    padding: 12px 14px !important;
+    border-radius: 12px !important;
+  }
+  .ov-kpi-val {
+    font-size: 18px !important;
+  }
+  .ov-col {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    overflow: hidden !important;
+  }
+  .ov-main-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 12px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+  .ov-card, .ov-card-trend {
+    padding: 12px 14px !important;
+    border-radius: 12px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+  }
+  .ov-card-head {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 6px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    padding-bottom: 8px !important;
+    margin-bottom: 10px !important;
+  }
+  .ov-card-head h4 {
+    font-size: 14px !important;
+    white-space: normal !important;
+    word-break: break-word !important;
+    line-height: 1.3 !important;
+    gap: 6px !important;
+    color: var(--fg) !important;
+  }
+  .ov-card-head .ov-more-link, .ov-card-head .tag {
+    font-size: 12px !important;
+    align-self: flex-start !important;
+    white-space: normal !important;
+  }
+  .ov-trend-head {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 6px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    margin-bottom: 10px !important;
+  }
+  .ov-trend-title {
+    font-size: 14px !important;
+    white-space: normal !important;
+    word-break: break-word !important;
+    line-height: 1.3 !important;
+    gap: 6px !important;
+    color: var(--fg) !important;
+  }
+  .ov-trend-today-badge {
+    align-self: flex-start !important;
+    font-size: 12px !important;
+    padding: 3px 8px !important;
+    border-radius: 6px !important;
+    background: var(--card) !important;
+    border: 1.5px solid var(--bd) !important;
+    color: var(--fg) !important;
+  }
+  .ov-trend-chart-scroll {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    box-sizing: border-box !important;
+  }
+  .ov-trend-chart-box {
+    display: flex !important;
+    gap: 4px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    height: 145px !important;
+    margin-bottom: 4px !important;
+  }
+  .ov-trend-yaxis {
+    width: 20px !important;
+    font-size: 10px !important;
+    flex-shrink: 0 !important;
+    color: var(--mut) !important;
+  }
+  .ov-trend-stage {
+    flex: 1 !important;
+    min-width: 0 !important;
+    position: relative !important;
+  }
+  .ov-trend-bars {
+    gap: 4px !important;
+    padding: 0 2px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  .ov-trend-bar-col {
+    min-width: 0 !important;
+    flex: 1 !important;
+  }
+  .ov-trend-bar {
+    max-width: 26px !important;
+    width: 100% !important;
+    border-radius: 4px 4px 0 0 !important;
+  }
+  .ov-trend-bar-val {
+    font-size: 9px !important;
+    padding: 1px 3px !important;
+  }
+  .ov-trend-labels-row {
+    display: flex !important;
+    gap: 4px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    margin-bottom: 8px !important;
+  }
+  .ov-trend-yaxis-spacer {
+    width: 20px !important;
+    flex-shrink: 0 !important;
+  }
+  .ov-trend-labels {
+    flex: 1 !important;
+    min-width: 0 !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    gap: 4px !important;
+    padding: 0 2px !important;
+    box-sizing: border-box !important;
+  }
+  .ov-trend-lbl {
+    flex: 1 !important;
+    min-width: 0 !important;
+    font-size: 9.5px !important;
+    text-align: center !important;
+    white-space: normal !important;
+    word-break: break-all !important;
+    line-height: 1.15 !important;
+    color: var(--mut) !important;
+  }
+  .ov-trend-lbl.is-today {
+    font-size: 9px !important;
+    font-weight: 700 !important;
+    color: var(--fg) !important;
+  }
+  .ov-trend-lbl.is-today .ov-trend-subdate {
+    font-size: 8px !important;
+    white-space: nowrap !important;
+    color: var(--mut) !important;
+  }
+  .ov-trend-footer {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 6px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    padding-top: 10px !important;
+  }
+  .ov-trend-footer-total {
+    font-size: 12.5px !important;
+    color: var(--mut) !important;
+  }
+  .ov-trend-footer-total b {
+    color: var(--fg) !important;
+  }
+  .ov-trend-footer-link {
+    font-size: 12px !important;
+    align-self: flex-start !important;
+    white-space: normal !important;
+    color: var(--pri) !important;
+  }
+  .ov-space-group {
+    width: 100% !important;
+    box-sizing: border-box !important;
+    margin-bottom: 10px !important;
+  }
+  .ov-space-title {
+    font-size: 12px !important;
+    margin-bottom: 6px !important;
+  }
+  .ov-space-tables {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  .ov-tbl-chip {
+    padding: 5px 8px !important;
+    font-size: 11px !important;
+    gap: 4px !important;
+    border-radius: 6px !important;
+    flex: 0 0 auto !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+}
+@media(max-width: 480px) {
+  .ov-kpi-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+html[data-dev=phone] #modal, html[data-dev=phone] #dlg {
+  padding: 10px !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+html[data-dev=phone] #modal > div, html[data-dev=phone] #dlg > .box, html[data-dev=phone] #dlg > div {
+  width: min(560px, calc(100vw - 20px)) !important;
+  max-width: 100% !important;
+  max-height: 75vh !important;
+  max-height: 75dvh !important;
+  border-radius: 16px !important;
+  margin: auto !important;
+  padding: 16px 14px !important;
+  box-sizing: border-box !important;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.35) !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+html[data-dev=phone] .ov-container, html[data-dev=tablet] .ov-container {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  overflow-x: hidden !important;
+  gap: 12px !important;
+  box-sizing: border-box !important;
+}
+html[data-dev=phone] .ov-main-grid, html[data-dev=tablet] .ov-main-grid {
+  grid-template-columns: minmax(0, 1fr) !important;
+  gap: 12px !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+}
+html[data-dev=phone] .ov-col, html[data-dev=tablet] .ov-col {
+  min-width: 0 !important;
+  max-width: 100% !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+  overflow: hidden !important;
+}
+html[data-dev=phone] .ov-card, html[data-dev=tablet] .ov-card,
+html[data-dev=phone] .ov-card-trend, html[data-dev=tablet] .ov-card-trend {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+  padding: 12px 14px !important;
+  border-radius: 12px !important;
+}
+html[data-dev=phone] .ov-trend-head, html[data-dev=tablet] .ov-trend-head,
+html[data-dev=phone] .ov-card-head, html[data-dev=tablet] .ov-card-head,
+html[data-dev=phone] .ov-trend-footer, html[data-dev=tablet] .ov-trend-footer {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  gap: 6px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+html[data-dev=phone] .ov-trend-title, html[data-dev=tablet] .ov-trend-title,
+html[data-dev=phone] .ov-card-head h4, html[data-dev=tablet] .ov-card-head h4 {
+  font-size: 14px !important;
+  white-space: normal !important;
+  word-break: break-word !important;
+  line-height: 1.3 !important;
+  gap: 6px !important;
+  color: var(--fg) !important;
+  margin: 0 !important;
+}
+html[data-dev=phone] .ov-trend-today-badge, html[data-dev=tablet] .ov-trend-today-badge {
+  align-self: flex-start !important;
+  font-size: 12px !important;
+  padding: 3px 8px !important;
+  border-radius: 6px !important;
+  background: var(--card) !important;
+  border: 1.5px solid var(--bd) !important;
+  color: var(--fg) !important;
+  white-space: nowrap !important;
+}
+html[data-dev=phone] .ov-card-head .ov-more-link, html[data-dev=tablet] .ov-card-head .ov-more-link,
+html[data-dev=phone] .ov-card-head .tag, html[data-dev=tablet] .ov-card-head .tag {
+  font-size: 12px !important;
+  align-self: flex-start !important;
+  white-space: normal !important;
+  color: var(--pri) !important;
+  text-decoration: none !important;
+}
+html[data-dev=phone] .ov-trend-chart-scroll, html[data-dev=tablet] .ov-trend-chart-scroll {
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+  box-sizing: border-box !important;
+}
+html[data-dev=phone] .ov-trend-chart-box, html[data-dev=tablet] .ov-trend-chart-box {
+  display: flex !important;
+  gap: 4px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  height: 145px !important;
+  margin-bottom: 4px !important;
+}
+html[data-dev=phone] .ov-trend-yaxis, html[data-dev=tablet] .ov-trend-yaxis {
+  width: 20px !important;
+  font-size: 10px !important;
+  flex-shrink: 0 !important;
+  color: var(--mut) !important;
+}
+html[data-dev=phone] .ov-trend-stage, html[data-dev=tablet] .ov-trend-stage {
+  flex: 1 !important;
+  min-width: 0 !important;
+  position: relative !important;
+}
+html[data-dev=phone] .ov-trend-bars, html[data-dev=tablet] .ov-trend-bars {
+  position: absolute !important;
+  inset: 0 !important;
+  display: flex !important;
+  align-items: flex-end !important;
+  justify-content: space-between !important;
+  gap: 4px !important;
+  padding: 0 2px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+html[data-dev=phone] .ov-trend-bar-col, html[data-dev=tablet] .ov-trend-bar-col {
+  min-width: 0 !important;
+  flex: 1 1 0 !important;
+}
+html[data-dev=phone] .ov-trend-bar, html[data-dev=tablet] .ov-trend-bar {
+  max-width: 26px !important;
+  width: 100% !important;
+  border-radius: 4px 4px 0 0 !important;
+}
+html[data-dev=phone] .ov-trend-labels-row, html[data-dev=tablet] .ov-trend-labels-row {
+  display: flex !important;
+  gap: 4px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  margin-bottom: 8px !important;
+}
+html[data-dev=phone] .ov-trend-yaxis-spacer, html[data-dev=tablet] .ov-trend-yaxis-spacer {
+  width: 20px !important;
+  flex-shrink: 0 !important;
+}
+html[data-dev=phone] .ov-trend-labels, html[data-dev=tablet] .ov-trend-labels {
+  flex: 1 !important;
+  min-width: 0 !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  gap: 4px !important;
+  padding: 0 2px !important;
+  box-sizing: border-box !important;
+}
+html[data-dev=phone] .ov-trend-lbl, html[data-dev=tablet] .ov-trend-lbl {
+  flex: 1 1 0 !important;
+  min-width: 0 !important;
+  font-size: 9.5px !important;
+  text-align: center !important;
+  white-space: normal !important;
+  word-break: normal !important;
+  line-height: 1.15 !important;
+  color: var(--mut) !important;
+}
+html[data-dev=phone] .ov-trend-lbl.is-today, html[data-dev=tablet] .ov-trend-lbl.is-today {
+  font-size: 9px !important;
+  font-weight: 700 !important;
+  color: var(--fg) !important;
+}
+html[data-dev=phone] .ov-trend-lbl.is-today .ov-trend-subdate, html[data-dev=tablet] .ov-trend-lbl.is-today .ov-trend-subdate {
+  font-size: 8px !important;
+  white-space: nowrap !important;
+  color: var(--mut) !important;
+}
+html[data-dev=phone] .ov-trend-footer-total, html[data-dev=tablet] .ov-trend-footer-total {
+  font-size: 12.5px !important;
+  color: var(--mut) !important;
+}
+html[data-dev=phone] .ov-trend-footer-total b, html[data-dev=tablet] .ov-trend-footer-total b {
+  color: var(--fg) !important;
+}
+html[data-dev=phone] .ov-trend-footer-link, html[data-dev=tablet] .ov-trend-footer-link {
+  font-size: 12px !important;
+  align-self: flex-start !important;
+  white-space: normal !important;
+  color: var(--pri) !important;
+  text-decoration: none !important;
+}
+html[data-dev=phone] .ov-space-group, html[data-dev=tablet] .ov-space-group {
+  width: 100% !important;
+  box-sizing: border-box !important;
+  margin-bottom: 10px !important;
+}
+html[data-dev=phone] .ov-space-title, html[data-dev=tablet] .ov-space-title {
+  font-size: 12px !important;
+  margin-bottom: 6px !important;
+}
+html[data-dev=phone] .ov-space-tables, html[data-dev=tablet] .ov-space-tables {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 6px !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+html[data-dev=phone] .ov-tbl-chip, html[data-dev=tablet] .ov-tbl-chip {
+  padding: 5px 8px !important;
+  font-size: 11px !important;
+  gap: 4px !important;
+  border-radius: 6px !important;
+  flex: 0 0 auto !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+html[data-dev=phone] .ov-header, html[data-dev=tablet] .ov-header {
+  flex-direction: column !important;
+  align-items: stretch !important;
+  gap: 12px !important;
+  padding: 12px 14px !important;
+  border-radius: 14px !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+html[data-dev=phone] .ov-header-actions, html[data-dev=tablet] .ov-header-actions {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 8px !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  flex-wrap: wrap !important;
+}
+html[data-dev=phone] .ov-btn-act, html[data-dev=tablet] .ov-btn-act {
+  width: 100% !important;
+  min-height: 40px !important;
+  height: auto !important;
+  padding: 8px 6px !important;
+  justify-content: center !important;
+  font-size: 12.5px !important;
+  border-radius: 8px !important;
+  box-sizing: border-box !important;
+  white-space: nowrap !important;
+  text-align: center !important;
 }
 </style>`);
 
@@ -19274,49 +20571,51 @@ PAGES.overview = () => {
                 <div class="ov-trend-today-badge">${money(todayRev)}</div>
               </div>
 
-              <div class="ov-trend-chart-box">
-                <!-- Trục tung Y-axis -->
-                <div class="ov-trend-yaxis">
-                  ${chartTicks.map(t => `<div>${t}</div>`).join('')}
-                </div>
-
-                <!-- Khung vẽ biểu đồ lưới & cột -->
-                <div class="ov-trend-stage">
-                  <!-- 5 đường lưới nét đứt + 1 đường baseline nét liền -->
-                  <div class="ov-trend-gridlines">
-                    <div class="ov-trend-gridline"></div>
-                    <div class="ov-trend-gridline"></div>
-                    <div class="ov-trend-gridline"></div>
-                    <div class="ov-trend-gridline"></div>
-                    <div class="ov-trend-gridline"></div>
-                    <div class="ov-trend-gridline baseline"></div>
+              <div class="ov-trend-chart-scroll">
+                <div class="ov-trend-chart-box">
+                  <!-- Trục tung Y-axis -->
+                  <div class="ov-trend-yaxis">
+                    ${chartTicks.map(t => `<div>${t}</div>`).join('')}
                   </div>
 
-                  <!-- 7 cột biểu đồ -->
-                  <div class="ov-trend-bars">
-                    ${last7Days.map(item => {
-                      const maxVal = (chartTicks[0] || 250) * 1000;
-                      const pct = Math.min(100, Math.max(item.rev > 0 ? 5 : 0, Math.round((item.rev / maxVal) * 100)));
-                      return `
-                        <div class="ov-trend-bar-col">
-                          <div class="ov-trend-bar-val">${money(item.rev)}</div>
-                          <div class="ov-trend-bar ${item.isToday ? 'is-today' : ''}" style="height:${pct}%;" title="${item.name} (${item.label}): ${money(item.rev)} (${item.count} đơn)"></div>
-                        </div>
-                      `;
-                    }).join('')}
-                  </div>
-                </div>
-              </div>
-
-              <!-- Nhãn trục hoành X-axis -->
-              <div class="ov-trend-labels-row">
-                <div class="ov-trend-yaxis-spacer"></div>
-                <div class="ov-trend-labels">
-                  ${last7Days.map(item => `
-                    <div class="ov-trend-lbl ${item.isToday ? 'is-today' : ''}">
-                      ${item.isToday ? `<div>Hôm nay</div><div class="ov-trend-subdate">(${item.subDate})</div>` : `<div>${item.label}</div>`}
+                  <!-- Khung vẽ biểu đồ lưới & cột -->
+                  <div class="ov-trend-stage">
+                    <!-- 5 đường lưới nét đứt + 1 đường baseline nét liền -->
+                    <div class="ov-trend-gridlines">
+                      <div class="ov-trend-gridline"></div>
+                      <div class="ov-trend-gridline"></div>
+                      <div class="ov-trend-gridline"></div>
+                      <div class="ov-trend-gridline"></div>
+                      <div class="ov-trend-gridline"></div>
+                      <div class="ov-trend-gridline baseline"></div>
                     </div>
-                  `).join('')}
+
+                    <!-- 7 cột biểu đồ -->
+                    <div class="ov-trend-bars">
+                      ${last7Days.map(item => {
+                        const maxVal = (chartTicks[0] || 250) * 1000;
+                        const pct = Math.min(100, Math.max(item.rev > 0 ? 5 : 0, Math.round((item.rev / maxVal) * 100)));
+                        return `
+                          <div class="ov-trend-bar-col">
+                            <div class="ov-trend-bar-val">${money(item.rev)}</div>
+                            <div class="ov-trend-bar ${item.isToday ? 'is-today' : ''}" style="height:${pct}%;" title="${item.name} (${item.label}): ${money(item.rev)} (${item.count} đơn)"></div>
+                          </div>
+                        `;
+                      }).join('')}
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Nhãn trục hoành X-axis -->
+                <div class="ov-trend-labels-row">
+                  <div class="ov-trend-yaxis-spacer"></div>
+                  <div class="ov-trend-labels">
+                    ${last7Days.map(item => `
+                      <div class="ov-trend-lbl ${item.isToday ? 'is-today' : ''}">
+                        ${item.isToday ? `<div>Hôm nay</div><div class="ov-trend-subdate">(${item.subDate})</div>` : `<div>${item.label}</div>`}
+                      </div>
+                    `).join('')}
+                  </div>
                 </div>
               </div>
 
